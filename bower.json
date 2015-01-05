@@ -1,0 +1,16 @@
+{
+  "name": "thrift-js-binary-protocol",
+  "version": "0.9.2",
+  "homepage": "https://github.com/radekg/thrift-js-binary-protocol.git",
+  "authors": [
+    "Radek Gruchalski <radek@gruchalski.com>"
+  ],
+  "description": "Apache Thrift TBinaryProtocol for JavaScript client.",
+  "main": "src/thrift-js-binary-protocol.js",
+  "keywords": [
+    "thrift", "binary"
+  ],
+  "license": "MIT",
+  "ignore": [
+  ]
+}
