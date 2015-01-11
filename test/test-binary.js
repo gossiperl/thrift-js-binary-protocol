@@ -3,7 +3,7 @@ var transport = new Thrift.Transport("/dummy");
 module("BinaryProtocol JavaScript tests");
 
   test("Boolean", function() {
-    var protocol = new Thrift.BinaryProtocol(transport);
+    var protocol = new Thrift.TBinaryProtocol(transport);
     protocol.writeBool( true );
     protocol.writeBool( false );
     equal(protocol.readBool().value, true);
@@ -12,28 +12,28 @@ module("BinaryProtocol JavaScript tests");
 
   test("I16", function() {
     var value = 54321;
-    var protocol = new Thrift.BinaryProtocol(transport);
+    var protocol = new Thrift.TBinaryProtocol(transport);
     protocol.writeI16( value );
     equal(protocol.readI16().value, value);
   });
 
   test("I32", function() {
     var value = 22832000;
-    var protocol = new Thrift.BinaryProtocol(transport);
+    var protocol = new Thrift.TBinaryProtocol(transport);
     protocol.writeI32( value );
     equal(protocol.readI32().value, value);
   });
 
   test("I64", function() {
     var value = 22832000;
-    var protocol = new Thrift.BinaryProtocol(transport);
+    var protocol = new Thrift.TBinaryProtocol(transport);
     protocol.writeI64( value );
     equal(protocol.readI64().value, value);
   });
 
   test("Double", function() {
     var value = 20.832;
-    var protocol = new Thrift.BinaryProtocol(transport);
+    var protocol = new Thrift.TBinaryProtocol(transport);
     protocol.writeDouble( value );
     equal(protocol.readDouble().value, value);
   });
@@ -42,7 +42,7 @@ module("BinaryProtocol JavaScript tests");
     var value1 = "zażółcić gęślą jaźń";
     var value2 = "Döner am Nürburgring";
     var value3 = "Да!";
-    var protocol = new Thrift.BinaryProtocol(transport);
+    var protocol = new Thrift.TBinaryProtocol(transport);
     protocol.writeString( value1 );
     protocol.writeString( value2 );
     protocol.writeString( value3 );
@@ -58,7 +58,7 @@ module("BinaryProtocol JavaScript tests");
       { name: "field2", value: 765345, fieldType: Thrift.Type.I32, fieldId: 1 },
       { name: "field3", value: false, fieldType: Thrift.Type.BOOL, fieldId: 2 } ];
     
-    var protocol = new Thrift.BinaryProtocol(transport);
+    var protocol = new Thrift.TBinaryProtocol(transport);
     protocol.writeStructBegin(structName);
     fields.forEach(function(fieldDef) {
       protocol.writeFieldBegin( fieldDef.name, fieldDef.fieldType, fieldDef.fieldId );
@@ -110,7 +110,7 @@ module("BinaryProtocol JavaScript tests");
   test("List", function() {
     var structName = "TestStruct";
     var items = [1,2,3,4,5];
-    var protocol = new Thrift.BinaryProtocol(transport);
+    var protocol = new Thrift.TBinaryProtocol(transport);
     protocol.writeStructBegin(structName);
     protocol.writeFieldBegin("some_shorts", Thrift.Type.LIST, 0);
     protocol.writeListBegin(Thrift.Type.I16, items.length);
@@ -150,7 +150,7 @@ module("BinaryProtocol JavaScript tests");
     var messageName = "warmUpLap";
     var messageSeqId = 0; // always 0
 
-    var protocol = new Thrift.BinaryProtocol(transport);
+    var protocol = new Thrift.TBinaryProtocol(transport);
     protocol.writeMessageBegin( messageName, messageType, messageSeqId );
     protocol.writeMessageEnd();
 

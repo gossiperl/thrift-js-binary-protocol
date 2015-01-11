@@ -18,7 +18,7 @@ Tests require the `thrift.js` file to be placed in the the `test/deps` directory
     <script src="thrift-js-binary-protocol.js"></script>
     <script>
       var transport = new Thrift.Transport("/dummy");
-      var protocol  = new Thrift.BinaryProtocol(transport);
+      var protocol  = new Thrift.TBinaryProtocol(transport);
       ...
     </script>
 

@@ -26,28 +26,28 @@
  * Initializes a BinaryProtocol Implementation as a Wrapper for Thrift.Protocol
  * @constructor
  * @param {Thrift.Transport} transport - The transport to serialize to/from.
- * @param {Object} args - object with configurable properties for the protocol.
+ * @param {boolean} stringRead - indicates strict read.
+ * @param {boolean} stringWrite - indicates strict write.
  * @classdesc Apache Thrift Protocols perform serialization which enables cross 
  * language RPC. The Protocol type is the JavaScript browser implementation 
  * of the Apache Thrift TBinaryProtocol.
  * @example
- *     var protocol  = new Thrift.BinaryProtocol(transport, { strictRead: true, strictWrite: true });
+ *     var protocol  = new Thrift.TBinaryProtocol(transport);
  */
-Thrift.BinaryProtocol = function(transport, args) {
-    var opts = args || {};
+Thrift.TBinaryProtocol = function(transport, strictRead, strictWrite) {
     this.buffer = [];
     this.transport = transport;
     this.buffer_read_offset = 0;
-    this.strictRead = ( typeof(opts.strictRead) !== 'undefined' && typeof(opts.strictRead) === 'boolean' ) ? opts.strictRead : false;
-    this.strictWrite = ( typeof(opts.strictWrite) !== 'undefined' && typeof(opts.strictWrite) === 'boolean' ) ? opts.strictWrite : false;
+    this.strictRead = (strictRead !== undefined ? strictRead : false);
+    this.strictWrite = (strictWrite !== undefined ? strictWrite : false);
 };
-Thrift.inherits(Thrift.BinaryProtocol, Thrift.Protocol, 'binaryProtocol');
+Thrift.inherits(Thrift.TBinaryProtocol, Thrift.Protocol, 'binaryProtocol');
 
-Thrift.BinaryProtocol.VERSION_MASK = 0xffff0000;
-Thrift.BinaryProtocol.VERSION_1 = 0x80010000;
-Thrift.BinaryProtocol.TYPE_MASK = 0x000000ff;
+Thrift.TBinaryProtocol.VERSION_MASK = 0xffff0000;
+Thrift.TBinaryProtocol.VERSION_1 = 0x80010000;
+Thrift.TBinaryProtocol.TYPE_MASK = 0x000000ff;
 
-Thrift.BinaryProtocol.prototype = {
+Thrift.TBinaryProtocol.prototype = {
 
     /**
      * Serializes the beginning of a Thrift RPC message.
@@ -57,7 +57,7 @@ Thrift.BinaryProtocol.prototype = {
      */
     writeMessageBegin: function(name, type, seqid) {
         if (this.strictWrite) {
-            this.writeI16(VERSION_1 >> 16);
+            this.writeI16(Thrift.TBinaryProtocol.VERSION_1 >> 16);
             this.writeI16(type);
             this.writeString(name);
             this.writeI32(seqid);
@@ -281,10 +281,10 @@ Thrift.BinaryProtocol.prototype = {
         var version = this.readI32().value;
         var name, type, seqid;
         if (version < 0) {
-            if (version & Thrift.BinaryProtocol.VERSION_MASK != Thrift.BinaryProtocol.VERSION_1) {
+            if (version & Thrift.TBinaryProtocol.VERSION_MASK != Thrift.TBinaryProtocol.VERSION_1) {
                 throw new Thrift.TException('Missing version identifier');
             }
-            type = version & Thrift.BinaryProtocol.TYPE_MASK;
+            type = version & Thrift.TBinaryProtocol.TYPE_MASK;
             name = this.readString().value;
             seqid = this.readI32().value;
             return { fname: name, mtype: type, rseqid: seqid };
