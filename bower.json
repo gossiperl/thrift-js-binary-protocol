@@ -1,7 +1,7 @@
 {
   "name": "thrift-js-binary-protocol",
   "version": "0.9.2",
-  "homepage": "https://github.com/radekg/thrift-js-binary-protocol.git",
+  "homepage": "https://github.com/gossiperl/thrift-js-binary-protocol.git",
   "authors": [
     "Radek Gruchalski <radek@gruchalski.com>"
   ],
