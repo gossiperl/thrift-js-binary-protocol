@@ -278,23 +278,23 @@ Thrift.TBinaryProtocol.prototype = {
      * @returns {AnonReadMessageBeginReturn}
      */
     readMessageBegin: function() {
-        var version = this.readI32().value;
+        var version = this.readI32();
         var name, type, seqid;
         if (version < 0) {
             if (version & Thrift.TBinaryProtocol.VERSION_MASK != Thrift.TBinaryProtocol.VERSION_1) {
                 throw new Thrift.TException('Missing version identifier');
             }
             type = version & Thrift.TBinaryProtocol.TYPE_MASK;
-            name = this.readString().value;
-            seqid = this.readI32().value;
+            name = this.readString();
+            seqid = this.readI32();
             return { fname: name, mtype: type, rseqid: seqid };
         } else {
             if (this.strictRead) {
                 throw new Thrift.TException('No version identifier, old protocol client?');
             }
             name = this.readMultipleAsString(version);
-            type = this.readByte().value;
-            seqid = this.readI32().value;
+            type = this.readByte();
+            seqid = this.readI32();
             return { fname: name, mtype: type, rseqid: seqid };
         }
     },
@@ -328,17 +328,17 @@ Thrift.TBinaryProtocol.prototype = {
      * @returns {AnonReadFieldBeginReturn}
      */
     readFieldBegin: function() {
-        var type = this.readByte().value;
+        var type = this.readByte();
         if (type == Thrift.Type.STOP) {
           return { fname: '', ftype: type, fid: 0 };
         } else {
-          return { fname: '', ftype: type, fid: this.readI16().value };
+          return { fname: '', ftype: type, fid: this.readI16() };
         }
     },
 
     /** Deserializes the end of a field. */
     readFieldEnd: function() {
-      return { value: '' };
+      return '';
     },
 
     /**
@@ -353,15 +353,15 @@ Thrift.TBinaryProtocol.prototype = {
      * @returns {AnonReadMapBeginReturn}
      */
     readMapBegin: function() {
-        var ktype = this.readByte().value;
-        var vtype = this.readByte().value;
-        var size  = this.readI32().value;
+        var ktype = this.readByte();
+        var vtype = this.readByte();
+        var size  = this.readI32();
         return { ktype: ktype, vtype: vtype, size: size };
     },
 
     /** Deserializes the end of a map. */
     readMapEnd: function() {
-        return this.readFieldEnd().value;
+        return this.readFieldEnd();
     },
 
     /**
@@ -375,14 +375,14 @@ Thrift.TBinaryProtocol.prototype = {
      * @returns {AnonReadColBeginReturn}
      */
     readListBegin: function() {
-        var etype = this.readByte().value;
-        var size = this.readI32().value;
+        var etype = this.readByte();
+        var size = this.readI32();
         return { etype: etype, size: size };
     },
 
     /** Deserializes the end of a list. */
     readListEnd: function() {
-        return this.readFieldEnd().value;
+        return this.readFieldEnd();
     },
 
     /** 
@@ -390,22 +390,22 @@ Thrift.TBinaryProtocol.prototype = {
      * @returns {AnonReadColBeginReturn}
      */
     readSetBegin: function() {
-        var etype = this.readByte().value;
-        var size = this.readI32().value;
+        var etype = this.readByte();
+        var size = this.readI32();
         return { etype: etype, size: size };
     },
 
     /** Deserializes the end of a set. */
     readSetEnd: function() {
-        return this.readFieldEnd().value;
+        return this.readFieldEnd();
     },
 
     /** Returns an object with a value property set to 
      *  False unless the next number in the protocol buffer 
      *  is 1, in which case the value property is True */
     readBool: function() {
-        var byte = this.readByte().value;
-        return { value: (byte !== 0) };
+        var byte = this.readByte();
+        return (byte !== 0);
     },
 
     /** Returns the an object with a value property set to the 
@@ -415,19 +415,19 @@ Thrift.TBinaryProtocol.prototype = {
         if (val > 0x7f) {
           val = 0 - ((val - 1) ^ 0xff);
         }
-        return { value: val };
+        return val;
     },
 
     /** Returns the an object with a value property set to the 
         next value found in the protocol buffer */
     readI16: function() {
-        return { value: ( (this.readByte().value & 255) << 8 | this.readByte().value & 255 ) };
+        return ( (this.readByte() & 255) << 8 | this.readByte() & 255 );
     },
 
     /** Returns the an object with a value property set to the 
         next value found in the protocol buffer */
     readI32: function() {
-        return { value: ( (this.readByte().value & 255) << 24 | (this.readByte().value & 255) << 16 | (this.readByte().value & 255) << 8 | this.readByte().value & 255 ) };
+        return ( (this.readByte() & 255) << 24 | (this.readByte() & 255) << 16 | (this.readByte() & 255) << 8 | this.readByte() & 255 );
     },
 
     /** Returns the an object with a value property set to the 
@@ -435,9 +435,9 @@ Thrift.TBinaryProtocol.prototype = {
     readI64: function() {
         // Although this is a correct way of packing a long int,
         // the value will overflow if the number is higher than max int
-        var i32_1 = this.readI32().value;
-        var i32_2 = this.readI32().value;
-        return { value: (i32_1 << 32 | i32_2) };
+        var i32_1 = this.readI32();
+        var i32_2 = this.readI32();
+        return (i32_1 << 32 | i32_2);
     },
 
     /** Returns the an object with a value property set to the 
@@ -466,27 +466,27 @@ Thrift.TBinaryProtocol.prototype = {
         var f = parseInt(str.substring(1 + ebits), 2);
         // Produce number
         if (e === (1 << ebits) - 1) {
-            return { value: (f !== 0 ? NaN : s * Infinity) };
+            return (f !== 0 ? NaN : s * Infinity);
         } else if (e > 0) {
-            return { value: (s * Math.pow(2, e - bias) * (1 + f / Math.pow(2, fbits))) };
+            return (s * Math.pow(2, e - bias) * (1 + f / Math.pow(2, fbits)));
         } else if (f !== 0) {
-            return { value: (s * Math.pow(2, -(bias-1)) * (f / Math.pow(2, fbits))) };
+            return (s * Math.pow(2, -(bias-1)) * (f / Math.pow(2, fbits)));
         } else {
-            return { value: (s * 0) };
+            return (s * 0);
         }
     },
 
     /** Returns the an object with a value property set to the 
         next value found in the protocol buffer */
     readString: function() {
-        var size = this.readI32().value;
+        var size = this.readI32();
         var bytes = this.readMultiple(size);
-        return { value: this.decode_utf8( this.stringFromByteArray(bytes) ) };
+        return this.decode_utf8( this.stringFromByteArray(bytes) );
     },
 
     readBinary: function() {
-      var size = this.readI32().value;
-      return { value: this.readMultiple( size ) };
+      var size = this.readI32();
+      return this.readMultiple( size );
     },
 
     /** Returns the an object with a value property set to the 
@@ -501,7 +501,7 @@ Thrift.TBinaryProtocol.prototype = {
     readMultiple: function(len) {
         var buf = [];
         for (var i=0; i<len; i++) {
-            buf.push( this.readByte().value );
+            buf.push( this.readByte() );
         }
         return buf;
     },
