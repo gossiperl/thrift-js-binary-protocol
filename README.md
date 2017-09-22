@@ -1,4 +1,4 @@
-# Apache Thrift BinaryPorotocol for JavaScript
+# Apache Thrift BinaryProtocol for JavaScript
 
 An implementation of TBinaryProtocol for JavaScript Thrift library.
 
