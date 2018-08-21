@@ -160,11 +160,11 @@ Thrift.TBinaryProtocol.prototype = {
     },
 
     /** Serializes a number */
-    writeByte: function(byte) {
-        if ( byte <= Math.pow(2,31)*-1 || byte >= Math.pow(2,31) ) {
-          throw new Error(byte + " is incorrect for byte.");
+    writeByte: function(b) {
+        if ( b <= Math.pow(2,31)*-1 || b >= Math.pow(2,31) ) {
+          throw new Error(b + " is incorrect for byte.");
         }
-        this.buffer.push(byte);
+        this.buffer.push(b);
     },
 
     /** Serializes a number (short) */
@@ -404,8 +404,8 @@ Thrift.TBinaryProtocol.prototype = {
      *  False unless the next number in the protocol buffer 
      *  is 1, in which case the value property is True */
     readBool: function() {
-        var byte = this.readByte().value;
-        return { value: (byte !== 0) };
+        var b = this.readByte().value;
+        return { value: (b !== 0) };
     },
 
     /** Returns the an object with a value property set to the 
@@ -452,9 +452,9 @@ Thrift.TBinaryProtocol.prototype = {
         // Bytes to bits
         var bits = [];
         for (var i = bytes.length; i; i -= 1) {
-            var byte = bytes[i - 1];
+            var b = bytes[i - 1];
             for (var j = 8; j; j -= 1) {
-                bits.push(byte % 2 ? 1 : 0); byte = byte >> 1;
+                bits.push(b % 2 ? 1 : 0); b = b >> 1;
             }
         }
         bits.reverse();
